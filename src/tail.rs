@@ -70,7 +70,8 @@ impl Follower {
 }
 
 fn format_event(kind: &EventKind, elapsed_ms: u64) -> String {
-    let timestamp = format!("+{:>9.3}s", elapsed_ms as f64 / MILLIS_PER_SECOND).dimmed();
+    let elapsed = format!("+{:.3}s", elapsed_ms as f64 / MILLIS_PER_SECOND);
+    let timestamp = format!("{elapsed:>10}").dimmed();
     let body = match kind {
         EventKind::RpcCall(call) => format_call(call),
         EventKind::Notification { method, .. } => format!("  notify {method}").cyan().to_string(),
@@ -114,7 +115,7 @@ fn format_call(call: &RpcCall) -> String {
         "".normal()
     };
     format!(
-        "{arrow} {:<40} {} {:>6} -> {:<6} tok{status}",
+        "{arrow} {:<40} {} {:>6} -> {:>6} tok{status}",
         name.bold(),
         color_latency(call.latency_ms),
         call.request_tokens,
@@ -176,11 +177,11 @@ mod tests {
         };
         let line = format_event(&EventKind::RpcCall(call), 1500);
         assert!(
-            line.starts_with("+    1.500s -> tools/call search"),
+            line.starts_with("   +1.500s -> tools/call search"),
             "{line}"
         );
         assert!(line.contains("12.5 ms"));
-        assert!(line.contains("7 -> 420"));
+        assert!(line.contains("7 ->    420 tok"));
         assert!(line.ends_with("ERROR"));
     }
 }

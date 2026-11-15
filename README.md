@@ -14,6 +14,8 @@ unchanged and writes what happened to a `.jsonl` trace.
 mcp-tap --log session.jsonl -- node dist/index.js
 ```
 
+![mcp-tap demo: live tail of an MCP session followed by the session report](docs/demo.gif)
+
 ## Features
 
 - **Transparent proxy**: `stdin`, `stdout` and `stderr` are forwarded byte for byte.
@@ -29,7 +31,7 @@ mcp-tap --log session.jsonl -- node dist/index.js
 ## Install
 
 ```bash
-cargo install --git https://github.com/<user>/mcp-tap
+cargo install --git https://github.com/Juanmidev/mcp-tap
 ```
 
 Or download a prebuilt binary from the Releases page.
@@ -66,10 +68,10 @@ mcp-tap tail [FILE]
 ```
 
 ```text
-+    0.000s session started: node dist/index.js
-+    0.004s   notify notifications/initialized
-+    0.206s -> tools/call search      206.1 ms     20 -> 125    tok
-+    0.207s -> tools/call missing       0.8 ms     20 -> 17     tok ERROR
+   +0.000s session started: node dist/index.js
+   +0.004s   notify notifications/initialized
+   +0.206s -> tools/call search                       206.1 ms     20 ->    125 tok
+   +0.207s -> tools/call missing                        0.8 ms     20 ->     17 tok ERROR
 ```
 
 Latency is green under 100 ms, yellow under 1 s and red above. Colors are turned off
@@ -83,11 +85,11 @@ mcp-tap report [FILE]
 ```
 
 ```text
-  RPC calls   2 (1 errors)
+  RPC calls   2 (1 error)
   Tokens      request 40 | response 142 | total 182
   Context     128k 0.1% | 200k 0.1% | 1M 0.0%
   Latency     avg 103.4 ms | max 206.1 ms
-  Warnings    1 oversized responses | 0 non-JSON lines
+  Warnings    1 oversized response | 0 non-JSON lines
 
   METHOD        TARGET     CALLS   ERR   REQ TOK   RESP TOK    AVG MS    MAX MS
   tools/call    search         1     0        20        125     206.1     206.1
@@ -114,7 +116,7 @@ Each session overwrites the trace file.
 ## Token estimation
 
 Token counts are an offline estimate (`chars / 3.8`), tuned for code and JSON and
-matching [repo-pack](https://github.com/<user>/repo-pack). They are fine for comparing
+matching [repo-pack](https://github.com/Juanmidev/repo-pack). They are fine for comparing
 tools and spotting oversized responses, but they are not exact tokenizer counts.
 
 ## Limitations

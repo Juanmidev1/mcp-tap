@@ -106,8 +106,9 @@ fn print_summary(out: &mut impl Write, path: &Path, summary: &Summary) -> io::Re
     writeln!(out, "mcp-tap report: {}\n", path.display())?;
     writeln!(
         out,
-        "  RPC calls   {} ({} errors)",
-        totals.calls, totals.errors
+        "  RPC calls   {} ({})",
+        totals.calls,
+        pluralize(totals.errors, "error")
     )?;
     writeln!(
         out,
@@ -125,10 +126,16 @@ fn print_summary(out: &mut impl Write, path: &Path, summary: &Summary) -> io::Re
     )?;
     writeln!(
         out,
-        "  Warnings    {} oversized responses | {} non-JSON lines\n",
-        summary.token_warnings, summary.raw_lines
+        "  Warnings    {} | {}\n",
+        pluralize(summary.token_warnings, "oversized response"),
+        pluralize(summary.raw_lines, "non-JSON line")
     )?;
     print_breakdown(out, &summary.by_target)
+}
+
+fn pluralize(count: usize, noun: &str) -> String {
+    let suffix = if count == 1 { "" } else { "s" };
+    format!("{count} {noun}{suffix}")
 }
 
 fn print_breakdown(out: &mut impl Write, rows: &[((String, String), CallStats)]) -> io::Result<()> {
