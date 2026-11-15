@@ -80,7 +80,13 @@ pub async fn spawn_writer(path: &Path) -> io::Result<(Tracer, JoinHandle<()>)> {
         .parent()
         .filter(|parent| !parent.as_os_str().is_empty())
     {
-        fs::create_dir_all(parent).await?;
+        fs::create_dir_all(parent).await.map_err(|error| {
+            let message = format!(
+                "cannot create trace directory {}: {error}",
+                parent.display()
+            );
+            io::Error::new(error.kind(), message)
+        })?;
     }
     let file = File::create(path).await.map_err(|error| {
         io::Error::new(
