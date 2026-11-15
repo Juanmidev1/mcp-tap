@@ -153,19 +153,21 @@ async fn wait_or_kill(child: &mut Child) -> io::Result<ExitStatus> {
     }
 }
 
+// A signal handler that fails to install must never be mistaken for a shutdown request
+#[cfg(unix)]
 async fn shutdown_requested() {
-    #[cfg(unix)]
-    {
-        use tokio::signal::unix::{SignalKind, signal};
-        let Ok(mut terminate) = signal(SignalKind::terminate()) else {
-            return std::future::pending().await;
-        };
-        tokio::select! {
-            result = tokio::signal::ctrl_c() => if result.is_err() { std::future::pending().await },
-            _ = terminate.recv() => {}
-        }
+    use tokio::signal::unix::{SignalKind, signal};
+    let Ok(mut terminate) = signal(SignalKind::terminate()) else {
+        return std::future::pending().await;
+    };
+    tokio::select! {
+        result = tokio::signal::ctrl_c() => if result.is_err() { std::future::pending().await },
+        _ = terminate.recv() => {}
     }
-    #[cfg(not(unix))]
+}
+
+#[cfg(not(unix))]
+async fn shutdown_requested() {
     if tokio::signal::ctrl_c().await.is_err() {
         std::future::pending::<()>().await;
     }
