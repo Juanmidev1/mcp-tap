@@ -1,6 +1,6 @@
 # mcp-tap
 
-[![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![CI](https://github.com/Juanmidev1/mcp-tap/actions/workflows/ci.yml/badge.svg)](https://github.com/Juanmidev1/mcp-tap/actions/workflows/ci.yml)
 
 A transparent `stdio` proxy, JSON-RPC 2.0 profiler and token auditor for
 [Model Context Protocol](https://modelcontextprotocol.io) servers, written in Rust.
@@ -124,6 +124,9 @@ tools and spotting oversized responses, but they are not exact tokenizer counts.
 - Frames are newline-delimited JSON, as the MCP `stdio` transport specifies. JSON-RPC
   batches (removed in MCP 2025-06-18) are forwarded but not correlated.
 - Requests that never get a response are not reported.
+- If a server ignores both stdin EOF and signals and is launched through a wrapper
+  (`npx`, `uv run`), only the wrapper is killed after the grace period and the real
+  server process may be left running.
 
 ## Development
 
