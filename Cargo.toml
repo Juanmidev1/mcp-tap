@@ -1,0 +1,15 @@
+[package]
+name = "mcp-tap"
+version = "0.1.0"
+edition = "2024"
+description = "Transparent stdio proxy, JSON-RPC profiler and token auditor for MCP servers"
+license = "MIT"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "process", "io-util", "io-std", "sync", "time", "signal"] }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
