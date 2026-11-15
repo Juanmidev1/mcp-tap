@@ -1,5 +1,10 @@
 mod cli;
 mod proxy;
+// TODO: drop once the trace writer consumes the correlator (feat/trace-tail-report)
+#[allow(dead_code)]
+mod rpc;
+#[allow(dead_code)]
+mod tokens;
 
 use std::process::ExitCode;
 
