@@ -31,7 +31,7 @@ mcp-tap --log session.jsonl -- node dist/index.js
 ## Install
 
 ```bash
-cargo install --git https://github.com/Juanmidev/mcp-tap
+cargo install --git https://github.com/Juanmidev1/mcp-tap
 ```
 
 Or download a prebuilt binary from the Releases page.
@@ -116,7 +116,7 @@ Each session overwrites the trace file.
 ## Token estimation
 
 Token counts are an offline estimate (`chars / 3.8`), tuned for code and JSON and
-matching [repo-pack](https://github.com/Juanmidev/repo-pack). They are fine for comparing
+matching [repo-pack](https://github.com/Juanmidev1/repo-pack). They are fine for comparing
 tools and spotting oversized responses, but they are not exact tokenizer counts.
 
 ## Limitations
