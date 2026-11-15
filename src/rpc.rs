@@ -1,17 +1,21 @@
 use std::collections::HashMap;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::tokens::estimate_tokens;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+const MICROS_PER_MILLI: f64 = 1000.0;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Direction {
     ClientToServer,
     ServerToClient,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RpcCall {
     pub direction: Direction,
     pub method: String,
@@ -99,12 +103,17 @@ impl Correlator {
             direction: request_direction,
             method: pending.method,
             target: pending.target,
-            latency_ms: now.duration_since(pending.started_at).as_secs_f64() * 1000.0,
+            latency_ms: to_millis(now.duration_since(pending.started_at)),
             request_tokens: pending.request_tokens,
             response_tokens,
             is_error: is_error_response(message),
         }))
     }
+}
+
+// Microsecond precision is plenty and keeps trace lines readable
+fn to_millis(elapsed: Duration) -> f64 {
+    elapsed.as_micros() as f64 / MICROS_PER_MILLI
 }
 
 fn opposite(direction: Direction) -> Direction {
@@ -133,8 +142,6 @@ fn is_error_response(message: &Value) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::time::Duration;
-
     use super::*;
 
     const CLIENT: Direction = Direction::ClientToServer;
