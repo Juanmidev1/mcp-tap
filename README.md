@@ -127,6 +127,10 @@ tools and spotting oversized responses, but they are not exact tokenizer counts.
 - If a server ignores both stdin EOF and signals and is launched through a wrapper
   (`npx`, `uv run`), only the wrapper is killed after the grace period and the real
   server process may be left running.
+- Tested on Linux. macOS and Windows builds are produced by CI but not tested yet; on
+  Windows only Ctrl+C triggers the graceful shutdown (there is no `SIGTERM`).
+- `tail` detects a new session when the trace file shrinks. If a new session grows the
+  file past its previous size between two polls (250 ms), `tail` misses the switch.
 
 ## Development
 
