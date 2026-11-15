@@ -128,7 +128,7 @@ fn print_summary(out: &mut impl Write, path: &Path, summary: &Summary) -> io::Re
         out,
         "  Warnings    {} | {}\n",
         pluralize(summary.token_warnings, "oversized response"),
-        pluralize(summary.raw_lines, "non-JSON line")
+        pluralize(summary.raw_lines, "non-JSON-RPC line")
     )?;
     print_breakdown(out, &summary.by_target)
 }

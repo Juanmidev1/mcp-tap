@@ -86,8 +86,8 @@ fn format_event(kind: &EventKind, elapsed_ms: u64) -> String {
                 .yellow()
                 .to_string()
         }
-        EventKind::RawStdout { line } => format!("! non-JSON stdout: {line}").red().to_string(),
-        EventKind::RawStdin { line } => format!("! non-JSON stdin: {line}").red().to_string(),
+        EventKind::RawStdout { line } => format!("! non-JSON-RPC stdout: {line}").red().to_string(),
+        EventKind::RawStdin { line } => format!("! non-JSON-RPC stdin: {line}").red().to_string(),
         EventKind::Stderr { line } => format!("  stderr: {line}").dimmed().to_string(),
         EventKind::SessionStart { command } => format!("session started: {}", command.join(" "))
             .bold()

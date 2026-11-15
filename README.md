@@ -89,7 +89,7 @@ mcp-tap report [FILE]
   Tokens      request 40 | response 142 | total 182
   Context     128k 0.1% | 200k 0.1% | 1M 0.0%
   Latency     avg 103.4 ms | max 206.1 ms
-  Warnings    1 oversized response | 0 non-JSON lines
+  Warnings    1 oversized response | 0 non-JSON-RPC lines
 
   METHOD        TARGET     CALLS   ERR   REQ TOK   RESP TOK    AVG MS    MAX MS
   tools/call    search         1     0        20        125     206.1     206.1
@@ -106,8 +106,8 @@ Each line is a JSON object with a `ts_ms` Unix timestamp and a `type` field:
 | `rpc_call`      | `direction`, `method`, `target`, `latency_ms`, `request_tokens`, `response_tokens`, `is_error` |
 | `notification`  | `direction`, `method`                                                                 |
 | `token_warning` | `method`, `target`, `response_tokens`, `limit`                                        |
-| `raw_stdout`    | `line` (a non-JSON line on the server's `stdout`, still forwarded untouched)          |
-| `raw_stdin`     | `line` (a non-JSON line from the client)                                              |
+| `raw_stdout`    | `line` (a line on the server's `stdout` that is not JSON-RPC, still forwarded untouched) |
+| `raw_stdin`     | `line` (a line from the client that is not JSON-RPC)                                  |
 | `stderr`        | `line`                                                                                |
 | `session_end`   | `exit_code`                                                                           |
 

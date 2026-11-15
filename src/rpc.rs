@@ -85,7 +85,8 @@ impl Correlator {
                 method: method.to_owned(),
             }),
             (None, Some(_)) => self.finish_call(direction, &message, tokens, now),
-            (None, None) => None,
+            // Valid JSON that is not JSON-RPC (e.g. a stray JSON logger) still corrupts the transport
+            (None, None) => Some(Observation::Malformed { direction }),
         }
     }
 
@@ -247,6 +248,11 @@ mod tests {
         let malformed = correlator.observe(SERVER, b"Server listening on stdio\n", now);
         assert_eq!(
             malformed,
+            Some(Observation::Malformed { direction: SERVER })
+        );
+        let stray_log = correlator.observe(SERVER, br#"{"level":30,"msg":"started"}"#, now);
+        assert_eq!(
+            stray_log,
             Some(Observation::Malformed { direction: SERVER })
         );
         assert_eq!(correlator.observe(SERVER, b"\n", now), None);
